@@ -25,7 +25,7 @@ export default function Home() {
     stiffness: 500,
   });
 
-  const imagePosition = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   const textPosition = useTransform(scrollYProgress, [0, 1], ["50%", "-100%"]);
   const skewFactor = useTransform(smoothVelocity, [-1000, 1000], [15, -15]);
   const skew = useSpring(0, { bounce: 0, visualDuration: 0.1 });
@@ -44,7 +44,7 @@ export default function Home() {
           <motion.div
             className="absolute w-full h-full"
             style={{
-              scale: imagePosition,
+              scale: imageScale,
             }}
           >
             <Image
