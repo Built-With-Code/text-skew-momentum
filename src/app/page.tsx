@@ -1,24 +1,63 @@
-import Image from "next/image";
+"use client";
+
+import {
+  motion,
+  useAnimationFrame,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from "motion/react";
+import { useRef } from "react";
 
 export default function Home() {
+  const container = useRef(null);
+
+  const { scrollY, scrollYProgress } = useScroll({
+    target: container,
+    offset: ["start center", "end center"],
+  });
+
+  const scrollVelocity = useVelocity(scrollY);
+  const smoothVelocity = useSpring(scrollVelocity, {
+    damping: 50,
+    stiffness: 500,
+  });
+
+  const imagePosition = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const textPosition = useTransform(scrollYProgress, [0, 1], ["50%", "-100%"]);
+  const skewFactor = useTransform(smoothVelocity, [-1000, 1000], [15, -15]);
+  const skew = useSpring(0, { bounce: 0, visualDuration: 0.1 });
+
+  useAnimationFrame(() => {
+    skew.set(skewFactor.get());
+  });
+
   return (
     <div className="font-[family-name:var(--font-geist-sans)]">
-      <section className="bg-yellow-500 h-screen w-full flex items-center justify-center">
-        <h1 className="text-white text-8xl font-bold">{"Hi, I'm Charles"}</h1>
+      <section className="bg-neutral-50 h-screen w-full flex items-center justify-center">
+        <h1 className="text-8xl font-bold">Hero Section</h1>
       </section>
-      <section className="relative h-screen w-full flex items-center justify-center">
-        <div className="absolute inset-0 w-full h-full object-cover -z-10">
-          <Image
-            className="w-full h-full object-cover"
-            src="/bg-image.jpg"
-            alt="Racecar driver"
-            fill
+      <section className="relative h-[300vh] w-full" ref={container}>
+        <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
+          <motion.div
+            className="absolute w-full h-full bg-cover"
+            style={{
+              backgroundImage: "url('/bg-image.jpg')",
+              scale: imagePosition,
+            }}
           />
           <div className="absolute inset-0 bg-black/70 w-full h-full object-cover" />
+          <motion.h1
+            className="uppercase font-bold text-white text-[10rem] text-nowrap"
+            style={{ x: textPosition, skew }}
+          >
+            {"It's more about hard work than talent"}
+          </motion.h1>
         </div>
-        <h1 className="uppercase font-bold text-white text-8xl text-nowrap">
-          {"It's more about hard work than talent"}
-        </h1>
+      </section>
+      <section className="bg-red-50 h-screen w-full flex items-center justify-center">
+        <h1 className="text-8xl font-bold">Another Section</h1>
       </section>
     </div>
   );
