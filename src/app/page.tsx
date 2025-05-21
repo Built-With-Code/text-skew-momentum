@@ -8,6 +8,7 @@ import {
   useTransform,
   useVelocity,
 } from "motion/react";
+import Image from "next/image";
 import { useRef } from "react";
 
 export default function Home() {
@@ -41,12 +42,18 @@ export default function Home() {
       <section className="relative h-[300vh] w-full" ref={container}>
         <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
           <motion.div
-            className="absolute w-full h-full bg-cover"
+            className="absolute w-full h-full"
             style={{
-              backgroundImage: "url('/bg-image.jpg')",
               scale: imagePosition,
             }}
-          />
+          >
+            <Image
+              className="object-cover"
+              src="/bg-image.jpg"
+              alt="Racecar driver"
+              fill
+            />
+          </motion.div>
           <div className="absolute inset-0 bg-black/70 w-full h-full object-cover" />
           <motion.h1
             className="uppercase font-bold text-white text-[10rem] text-nowrap"
